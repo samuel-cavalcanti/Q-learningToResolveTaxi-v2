@@ -18,7 +18,7 @@ __Gráfico 1__
 ![](Taxi-v2/graphics/Timesteps.png "passos pro partida")
 __Gráfico 2__  
   
-__dependências desse reposítorio:__  
+__dependências desse repositório:__  
 numpy  
 matplotlib  
 keras  
