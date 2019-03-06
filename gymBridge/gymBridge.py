@@ -14,9 +14,11 @@ class GymBridge:
 
         next_observation, reward, done, info  = self._env.step(action)
 
-        self._model.update(self._toInputArray(next_observation),reward,done,info)
+        self._current_observation = self._toInputArray(next_observation)
 
-        self._current_observation = next_observation
+        self._model.update(self._current_observation,reward,done,info)
+
+        
 
         return done , reward , info
 
@@ -42,9 +44,10 @@ class GymBridge:
         for i in range(numb_of_matches):
           steps , reward, done = self.match(max_steps)
           if debug:
+               print("episode: {}/{}".format(i,numb_of_matches))
                print("Timesteps taken: {}".format(steps))
                print("reward: {}".format(reward))
-               print("finish: {}".format(done))
+               print("finish match: {}".format(done))
                time_steps.append(steps)
                reward_list.append(reward)
 

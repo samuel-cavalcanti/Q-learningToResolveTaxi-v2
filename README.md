@@ -3,7 +3,7 @@
 jogos resolvidos:
 
 - [x] Taxi-V2  
-- [ ] CartPole-V1
+- [x] CartPole-V1 __*__ 
 - [ ] FrozenLake-v0
 
 algoritmos de aprendizagem por reforço implementados:
@@ -33,3 +33,5 @@ pip install keras
 ```shell
 pip install matplotlib
 ```
+
+__* OBS CartPole-V1:__ treinando uma mini Deep Q-Learning para enviar os gráficos
