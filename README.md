@@ -2,7 +2,7 @@
 
 jogos resolvidos:
 
-- [x] Taxi-V2  __Gráfico 2:__ total de movimentos do taxi por partida
+- [x] Taxi-V2  
 - [x] CartPole-V1 
 - [ ] FrozenLake-v0
 
@@ -21,11 +21,12 @@ __Gráfico 2:__ total de movimentos do taxi por partida
 
 
 ## Gráficos CartPole-v1
-![](CartPole-v1/graphics/treinamento.png "treinamento")  
 __Gráfico 1:__ recompensa por partida durante o treinamento
+![](CartPole-v1/graphics/treinamento.png "treinamento")  
 
-![](CartPole-v1/graphics/teste.png "teste")  
 __Gráfico 2:__ recompensa por partida na fases de testes  
+![](CartPole-v1/graphics/teste.png "teste")  
+
 
 A recomenpensa média da Deeo Q-leaning  
 para resolver o CartPoleV1 ficou __549.31__
