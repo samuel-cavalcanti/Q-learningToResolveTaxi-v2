@@ -2,12 +2,12 @@ import numpy as np
 
 class Q_learning:
 
-    def __init__(self, max_num_states, max_num_actions, random_func, alpha=0.1, gamma=0.4, epsilon=1, epsilon_min=0.01, epsilon_decay=0.995):
+    def __init__(self, max_num_states, max_num_actions, random_func, alpha=0.1, gamma=0.4, epsilon=1, epsilon_min=0.01, epsilon_decay=0.995,n_resets= 0):
         self.q_table = np.zeros([max_num_states, max_num_actions])
         self.random = random_func
-        self._setHyperParameters(alpha, gamma, epsilon, epsilon_min, epsilon_decay)
+        self._setHyperParameters(alpha, gamma, epsilon, epsilon_min, epsilon_decay,n_resets)
 
-    def _setHyperParameters(self, alpha, gamma, epsilon,epsilon_min, epsilon_decay):
+    def _setHyperParameters(self, alpha, gamma, epsilon,epsilon_min, epsilon_decay,n_resets):
         
         self._alpha = alpha
     
@@ -18,6 +18,8 @@ class Q_learning:
         self._epsilon_min = epsilon_min
     
         self._epsilon_decay = epsilon_decay
+
+        self._n_resets = n_resets
 
     def _explorationOrExploitation(self, state):
         if np.random.uniform(0, 1) < self._epsilon:
@@ -46,6 +48,9 @@ class Q_learning:
     def _updateEpsion(self):
         if self._epsilon > self._epsilon_min:
             self._epsilon *= self._epsilon_decay
+        elif self._n_resets > 0:
+            self._epsilon = 0.5
+            self._n_resets -=1
      
     def load(self, file):
         self.q_table = np.load(file)
