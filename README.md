@@ -2,8 +2,8 @@
 
 jogos resolvidos:
 
-- [x] Taxi-V2  
-- [x] CartPole-V1 __*__
+- [x] Taxi-V2  __Gráfico 2:__ total de movimentos do taxi por partida
+- [x] CartPole-V1 
 - [ ] FrozenLake-v0
 
 algoritmos de aprendizagem por reforço implementados:
