@@ -68,18 +68,22 @@ class GeneticAlgorithm:
         max_threads = int(cpu_count() -1 )       
         size = len(population)      
         
-        for i in range(1,max_threads+1):
-            pool = Pool(max_threads)
-            chromosome_list = [individuals.chromosome for individuals in population[ int((i -1)*size/3) :int(i*size/3) ]]
-            scores = pool.map(self.fitness_function,chromosome_list)
+        # for i in range(1,max_threads+1):
+        #     pool = Pool(max_threads)
+        #     chromosome_list = [individuals.chromosome for individuals in population[ int((i -1)*size/3) :int(i*size/3) ]]
+        #     scores = pool.map(self.fitness_function,chromosome_list)
 
            
 
-            for score , individual  in zip( scores ,[individuals for individuals in population[ int((i -1)*size/3) :int(i*size/3) ]]):
-                individual.score = score
+        #     for score , individual  in zip( scores ,[individuals for individuals in population[ int((i -1)*size/3) :int(i*size/3) ]]):
+        #         individual.score = score
 
-            pool.close()
-            pool.join()
+        #     pool.close()
+        #     pool.join()
+
+        for individual in self.__population:
+            individual.score = self.fitness_function(individual.chromosome)
+
 
 
     def _getBestIndividuals(self, population):
@@ -136,7 +140,7 @@ class GeneticAlgorithm:
     def print(self):
 
         for individual in self.__population:
-            print("score: {} , chormosome: {}".format(individual.score,individual.chormosome))
+            print("score: {} , chormosome: {}".format(individual.score,individual.chromosome))
 
 
     def populationToCSV(self,fileName):
@@ -225,6 +229,7 @@ class GeneticAlgorithm:
 
         while new_value > max(self.__interval[index]) or new_value < min(self.__interval[index]):
             operation = self._sumOrSubtract()
-            new_value = np.random.uniform(min_value,max_value) * operation + chromosome[index]
+            new_value = np.random.uniform(min_value,max_value)
+            print("new value {} , interval {}".format(new_value , self.__interval[index] ))
 
         chromosome[index] = new_value

@@ -18,6 +18,7 @@ def changeReward(next_observation, reward, done, info):
 
 
 def fitnessFunction(chromosome):
+   
     model = Q_learning(env.observation_space.n, env.action_space.n, env.action_space.sample,
                        alpha=chromosome[0], gamma=chromosome[1], epsilon_decay=chromosome[2], epsilon_min=chromosome[3])
 
@@ -53,14 +54,13 @@ if __name__ == "__main__":
     
     signal.signal(signal.SIGINT,ctrl_c)
    
-    global ga
 
 
-    #     model = Q_learning(env.observation_space.n, env.action_space.n, env.action_space.sample,alpha=0.2,gamma=0.8589,epsilon_decay=0.996,epsilon_min=0.01,n_resets=10)
+    #     model = Q_learning(env.observation_space.n, env.action_space.n, env.action_space.sample,alpha=0.2,gamma=0.8589,epsilon_decay=0.996,I=0.01,n_resets=10)
     #     model.load("model.npy")
 
     interval = [[0, 1], [0, 1], [1.0, 0.7], [0.5, 0]]
-    size_population = 100
+    size_population = 5
    
     ga = GeneticAlgorithm(size_population, interval, float, fitnessFunction)
 
