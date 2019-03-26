@@ -23,13 +23,13 @@ class DeepQLearning(Q_learning):
         self._batch_size = batch_size
         
         if size_memory is not None:
-            self.memory = deque(maxlen=size_memory)        
+            self._memory = deque(maxlen=size_memory)        
 
         super()._setHyperParameters(alpha, gamma, epsilon,epsilon_min, epsilon_decay, n_resets)
 
               
     def _remember(self, current_state, action, reward, next_state, done):
-        self.memory.append((current_state, action, reward, next_state, done))
+        self._memory.append((current_state, action, reward, next_state, done))
 
 
     def _explorationOrExploitation(self, state):
@@ -45,20 +45,21 @@ class DeepQLearning(Q_learning):
   
     def update(self,next_state,reward,done,info):
        
-        if hasattr(self,"memory"):
+        if hasattr(self,"_memory"):
             self._remember(self._current_state,self._current_action,reward,next_state,done)
-            if len(self.memory) > self._batch_size:
+            if len(self._memory) > self._batch_size:
                 self._replay()
         else:
             self._fitModel(self._current_state,self._current_action,reward,next_state,done)
 
         if done:
-            self._updateEpsion()
+            self._updateEpsilon()
+            
 
        
     # https://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf
     def _replay(self):
-        mini_batch = random.sample(self.memory, self._batch_size)
+        mini_batch = random.sample(self._memory, self._batch_size)
        
         for current_state, action, reward, next_state, done in mini_batch:               
             self._fitModel(current_state,action,reward,next_state,done)

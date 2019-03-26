@@ -19,6 +19,15 @@ __Gráfico 1:__  recompensa por partida
 __Gráfico 2:__ total de movimentos do taxi por partida
 ![](Taxi-v2/graphics/Timesteps.png "passos pro partida")
 
+parâmetros Q-learning    | valor
+-------------------------|------
+&alpha;                  | 0.2
+&gamma;                  | 0.9
+&epsilon;                | 1
+decaimento do &epsilon;  | 0.9996
+&epsilon; min            | 0.01
+
+
 
 ## Gráficos CartPole-v1
 __Gráfico 1:__ recompensa por partida durante o treinamento
@@ -32,7 +41,7 @@ A recomenpensa média da Deeo Q-leaning
 para resolver o CartPoleV1 ficou __549.31__
 
 
-paramêtro das ~~mini~~ deep Q-leaning      | valor
+parâmetros ~~mini~~ deep Q-leaning      | valor
 -----------------------------------|------
 &gamma;                            | 0.99
 learning rate                      | 0.001

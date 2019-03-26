@@ -1,14 +1,21 @@
 from matplotlib import pyplot as plot
+from matplotlib.animation import FuncAnimation
 import numpy as np 
+
 
 class GymBridge:
     
+
     def __init__(self, gym_env,model,toInputArray,change_reward=None,limit_reward = float("inf")):
         self._env = gym_env
         self._model = model
         self._toInputArray = toInputArray
         self._changeReward = change_reward
         self._limit_reward = limit_reward
+        #futura classe
+
+        self.__steps = list()
+        self.__rewards = list()
 
     
     def oneStep(self,test_agent):
@@ -45,81 +52,138 @@ class GymBridge:
         return steps , total_reward , done
 
 
-    def trainAgent(self,debug=False, numb_of_matches=10000,max_steps = float("inf"), model_file = "model" ):
-        if debug:
-          time_steps = []
-          reward_list = []
+    def trainAgent(self,showPlot=False , terminalDebug= False, numb_of_matches=10000,max_steps = float("inf"), model_file = None ):
+        if terminalDebug:
           avarage_reward = 0
+          sample_size = 100
+
+
+
+        time_steps = []
+        reward_list = []
 
         for i in range(int(numb_of_matches)):
           steps , reward, done = self.match(max_steps)
+          self.__steps.append(steps)
+          self.__rewards.append(reward)
+          
 
-          if debug:
-                time_steps.append(steps)
-                reward_list.append(reward)
+         
 
-                if len(reward_list) % 100 == 0:
-                    avarage_reward = np.mean(reward_list[i-100:i])
+          time_steps.append(steps)
+          reward_list.append(reward)
+
+          if terminalDebug:
+                if len(reward_list) % sample_size == 0:
+                    avarage_reward = np.mean(reward_list[i+1-sample_size:i])
                 self._terminalDebug(i,numb_of_matches,steps,reward,avarage_reward)
                 
                
 
-        if debug:
-            self._showGraph(time_steps,reward_list)
+        # if showPlot:
+        #     plot.pause(0.05)
+        #     self._showGraph(time_steps,reward_list,show=True)
+
+           
 
         if type(model_file) is str:
             self._model.save(model_file)
         
+        return np.array(time_steps) , np.array(reward_list)
 
     def _terminalDebug(self,current_episode,max_episode,steps,reward,avarage_reward ):
          print("episode: {}/{}".format(current_episode,max_episode))
          print("Timesteps taken: {}".format(steps))
          print("reward: {}".format(reward))
          print("avarage reward {}".format(avarage_reward))
+         if hasattr(self._model,"getEpsilon"):
+                print("curret epsilon: {}".format(self._model.getEpsilon()))
+
+    def _plotGraph(self,array,plot_name,x_label,y_label,show,save):
+
+        
+        plot.figure(plot_name)
+        plot.plot(array)
+        plot.ylabel(x_label)
+        plot.xlabel(y_label)
+
+        if save:
+            plot.savefig(plot_name,bbox_inches="tight")
+
+        if show:
+           
+            plot.draw()
+           
+         
+
+    def _showGraph(self,time_steps,reward_list,show=False,save=False):
+        plot.clf()
+        self._plotGraph(time_steps,"Time steps","steps","match",False,save)
+        self._plotGraph(reward_list,"reward","reward","match",show,save)
 
 
-    def _showGraph(self,time_steps,reward_list):
-        time_steps = np.array(time_steps)
-        reward_list= np.array(reward_list)
 
-    
+
+# futura classe
+    def realTimePlot(self):
+      
+        
+
+        #futura classe
+        self.__reawrd_plot = plot.figure("Reward")
+        self.__time_steps_plot = plot.figure("Time Steps")
        
-
-        plot.figure("Timesteps")
-        plot.plot(time_steps)
-        plot.ylabel("movimentos")
-        plot.xlabel("partida")
-
-        plot.figure("reward")
-        plot.plot(reward_list)
-        plot.xlabel("partida")
-        plot.ylabel("recompesa")
+        self.__time_steps_space, = plot.plot([], [], "-")
+        self.__reward_space, = plot.plot([], [], "-")
 
 
-        # plot.figure("average reward ")
-        # plot.plot()
-        # plot.xlabel("partida")
-        # plot.ylabel("média de recompesa")
-
-
+        self.animation = FuncAnimation(self.__reawrd_plot,self._updateReward,blit=True)
+        # self.animation_2 = FuncAnimation(self.__time_steps_plot,self._updateTimeSteps,interval=200)
         plot.show()
+        
+        
        
-    def testAgent(self,debug=False,numb_of_matches =200,max_steps = float("inf")):
-        time_steps = []
-        reward_list = []
+       
 
-        for i in range(numb_of_matches):
-            steps , reward, done = self.match(max_steps)
+     
 
-            if debug :
-                print("episode: {}/{}".format(i,numb_of_matches))
-                print("Timesteps taken: {}".format(steps))
-                print("reward: {}".format(reward))
-                print("finish match: {}".format(done))
 
-            time_steps.append(steps)
-            reward_list.append(reward)
+    def closePlot(self):
+        plot.close(self.__reawrd_plot)
+        plot.close(self.__time_steps_plot)
+        print("finish")
+        plot.ioff()
 
-        self._showGraph(time_steps,reward_list)
 
-        return  np.array(reward_list) , np.array(time_steps)
+
+    def _updateReward(self,frame):
+       
+        self.__reawrd_plot.gca().relim()
+        self.__reawrd_plot.gca().autoscale_view()
+
+      
+
+        print("__rewards",frame)
+        axis_x = [ i for i in range(len(self.__rewards)) ]
+
+        print("re",axis_x)
+      
+
+        self.__reward_space.set_data(axis_x, self.__rewards)
+
+           
+    
+        return self.__reward_space,
+
+    def _updateTimeSteps(self,frame):
+        print("steps")
+
+        axis_x = [ i for i in range(len(self.__steps)) ]
+        self.__time_steps_space.set_data(axis_x,self.__steps)
+
+        self.__time_steps_plot.gca().relim()
+        self.__time_steps_plot.gca().autoscale_view()
+
+       
+
+        return self.__time_steps_space,

@@ -18,13 +18,16 @@ def toInputArray(state):
 
 def buildModel(input_size, output_size):
         LEARNING_RATE = 0.001
-                
+
+        n_nodes = 1000        
         input_layer = layers.Input(shape=(input_size,))
 
-        first_hidden_layer = layers.Dense(48, activation="relu")(input_layer)
-        second_hidden_layer = layers.Dense(48, activation="relu")(first_hidden_layer)
 
-        output_layer = layers.Dense(output_size, activation="linear")(second_hidden_layer)
+        first_hidden_layer = layers.Dense(n_nodes, activation="relu")(input_layer)
+        # second_hidden_layer = layers.Dense(n_nodes, activation="relu")(first_hidden_layer)
+        # third_hidden_layer = layers.Dense(n_nodes,activation="relu")(second_hidden_layer)
+
+        output_layer = layers.Dense(output_size, activation="linear")(first_hidden_layer)
         
         model = models.Model(inputs=input_layer, outputs=output_layer)
         model.compile(optimizer=Adam(lr=LEARNING_RATE), loss="mse")
@@ -33,24 +36,21 @@ def buildModel(input_size, output_size):
 
 def changeReward(next_observation, reward, done, info):
         if done:
-          return - reward
+          return -1
 
-        return reward
+        return 1
 
 
 if __name__ == "__main__":
     env = gym.make("CartPole-v1").env
     model = buildModel(env.observation_space.shape[0],env.action_space.n)
    
-    deepQlearning  = DeepQLearning(model,env.action_space.sample,gamma=0.99, size_memory=None,epsilon_decay=0.996)
+    deepQlearning  = DeepQLearning(model,env.action_space.sample,gamma=0.99, size_memory=10,epsilon_decay=0.996,batch_size=3,epsilon_min=0.1)
 
-#     deepQlearning.load("model")
+    bridge = GymBridge(env,deepQlearning,toInputArray,changeReward)
 
+    bridge.trainAgent(debug=True, numb_of_matches=3600, max_steps=1000)
 
-    bridge = GymBridge(env,deepQlearning,toInputArray,changeReward,limit_reward=1e3)
-
-    bridge.trainAgent(debug=True, numb_of_matches=1200)
-
-    rewards , timesteps = bridge.testAgent(numb_of_matches=100)
+    rewards , timesteps = bridge.trainAgent(numb_of_matches=100,debug=True)
     
     print("average reward",rewards.mean())
