@@ -3,13 +3,13 @@
 jogos resolvidos:
 
 - [x] Taxi-V2  
-- [x] CartPole-V1 
+- [x] CartPole-V1
 - [ ] FrozenLake-v0
 
 algoritmos de aprendizagem por reforço implementados:
 - [x] Q-Learning
 - [x] Deep Q-Learning
-
+- [ ] Multi Q-learning
 
 ## Gráficos Taxi-V2
 __Gráfico 1:__  recompensa por partida
@@ -53,10 +53,6 @@ número de nós da primeira camada   | 48
 número de nós da segunda camada    | 48
 otimizador                         | Adam
 funcção objetivo                   | mse
-
-__OBS:__ Como o Cart-Pole respeita o processo de markov  
-foi escolhido remover a estrutra _memory_ da Deep Q-leaning  
-~~Pelo menos é o que eu acho~~
 
 __dependências desse repositório:__  
 numpy  
