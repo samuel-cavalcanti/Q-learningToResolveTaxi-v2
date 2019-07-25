@@ -1,2 +1,4 @@
 .idea/
 models/EvolutionaryQlearning.py
+models/__pycache__/
+geneticAlgorithm/__pycache__/
