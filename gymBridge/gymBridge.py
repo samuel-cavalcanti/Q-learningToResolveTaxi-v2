@@ -11,6 +11,8 @@ class GymBridge:
         self._toInputArray = toInputArray
         self._changeReward = change_reward
         self._limit_reward = limit_reward
+        self._current_observation = None
+        self._current_action = None
         # futura classe
 
         self.__average_steps = list()
@@ -26,13 +28,13 @@ class GymBridge:
 
         if test_agent:
             self._env.render()
-            print("action: {}".format(action))
-            time.sleep(1.5)
-
-        self._current_observation = self._toInputArray(next_observation)
+            # print("action: {}".format(action))
+            # time.sleep(1.5)
 
         if self._changeReward is not None:
-            reward = self._changeReward(next_observation, reward, done, info)
+            reward = self._changeReward(self._current_observation, next_observation, reward, done, info)
+
+        self._current_observation = self._toInputArray(next_observation)
 
         if not test_agent:
             self._model.update(self._current_observation, reward, done, info)
@@ -57,7 +59,7 @@ class GymBridge:
     def trainAgent(self, show_plot=False, terminal_debug=False, numb_of_matches=10000, max_steps=float("inf"),
                    model_file=None, test_agent=False):
         if terminal_debug:
-            sample_size = 100
+            sample_size = 1
 
         time_steps = []
         reward_list = []
@@ -69,7 +71,7 @@ class GymBridge:
             reward_list.append(reward)
 
             if terminal_debug and len(reward_list) % sample_size == 0:
-                head = i + 1 - sample_size
+                head = i + 1 - 100
                 average_reward = np.mean(reward_list[head:i])
 
                 average_steps = np.mean(time_steps[head:i])

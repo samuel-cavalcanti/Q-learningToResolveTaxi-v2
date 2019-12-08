@@ -18,7 +18,6 @@ class MultiQlearning(Q_learning):
 
         self._population = self._generatePopulation(size_population, max_num_states, max_num_actions)
 
-
         super()._setHyperParameters(alpha, gamma, epsilon, epsilon_min, epsilon_decay, n_resets)
 
     def _generatePopulation(self, size_population, max_num_states, max_num_actions):
@@ -59,7 +58,7 @@ class MultiQlearning(Q_learning):
         new_value = old_value + self._alpha * (reward + self._gamma * n * next_max)
 
         self._population[index_table][self._current_state, self._current_action] = new_value
-       
+
     def _resetEvaluateParameters(self):
         self.__accumulate_reward = 0
         self.__n_iterations = 0
